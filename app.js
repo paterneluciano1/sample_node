@@ -7,6 +7,7 @@ const env = require('./config');
 const homeRouter = require('./routes/home');
 const checkoutRouter = require('./routes/checkout');
 const paymentRouter = require('./routes/payment');
+const webhookRouter = require('./routes/webhook');
 const callbackRouter = require('./routes/callback');
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/', homeRouter);
 app.use('/home', homeRouter);
 app.use('/checkout', checkoutRouter);
 app.use('/payment', paymentRouter);
+app.use('/webhook', webhookRouter);
 app.use('/callback', callbackRouter);
 
 /**

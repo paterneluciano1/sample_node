@@ -18,7 +18,7 @@ router.get('/', async function(req, res) {
     if(typeof req.query.status !== 'undefined' && typeof req.query.id !== 'undefined') {
 
         // Set the ApiKey and the environment.
-        FedaPay.setApiKey(env.apiKey);
+        FedaPay.setApiKey(env.apiKeys);
         FedaPay.setEnvironment(env.environment);
 
         try {

@@ -1,5 +1,7 @@
 const express = require('express');
+
 const { FedaPay, Transaction } = require('fedapay');
+
 const env = require('../config');
 
 const router = express.Router();
@@ -13,14 +15,16 @@ router.post('/', async function(req, res) {
     /**
      * Set the ApiKey and the environment.
      */
-    FedaPay.setApiKey(env.apiKey);
+    FedaPay.setApiKey(env.apiKeys);
     FedaPay.setEnvironment(env.environment);
+
+    try {
 
     const data = req.body;
     const transaction = await Transaction.create({
         description: 'Achat de vêtements',
         amount: data.amount,
-        callback_url: `http://${req.hostname}:${req.socket.localPort}/callback`,
+        callback_url: `http://nodesample.fedapay.com/callback`,
         currency: {
             iso: 'XOF'
         },
@@ -35,9 +39,19 @@ router.post('/', async function(req, res) {
         }
     });
 
+    console.log("Paiement validé avec succès: ", transaction);
+
     const token = await transaction.generateToken();
 
-    res.redirect(token.url);
+    return res.redirect(token.url);
+
+} catch (error) {
+
+    console.error('Erreur lors du paiement  de la transaction :', error.response ? error.response.data : error.message);
+
+    return res.status(400).json({ error: `Transaction Error: ${error.message}` });
+}
 });
+
 
 module.exports = router;
